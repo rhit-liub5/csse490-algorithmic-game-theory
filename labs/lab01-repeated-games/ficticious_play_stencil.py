@@ -14,6 +14,7 @@ class FictitiousPlayAgent(RPSAgent):
 
     def get_action(self):
         dist = self.predict()
+        print(dist)
         best_move = self.optimize(dist)
         return self.actions[best_move]
 
@@ -31,8 +32,12 @@ class FictitiousPlayAgent(RPSAgent):
         Uses the opponent's previous moves (self.opp_action_history) to generate and return a probability distribution
         over the opponent's next move
         """
-        # TODO Return a a probability distribution over the opponent’s next move
-        raise NotImplementedError
+        # DONE Return a a probability distribution over the opponent’s next move
+        if len(self.opp_action_history) == 0:
+            return np.ones(len(self.actions)) / len(self.actions)
+        counts = [self.opp_action_history.count(action) for action in self.actions]
+        total = sum(counts)
+        return np.array(counts) / total
 
     def optimize(self, dist):
         """
@@ -40,13 +45,23 @@ class FictitiousPlayAgent(RPSAgent):
         Return the best move according to Ficticious Play.
         Please return one of [self.ROCK, self.PAPER, self.SCISSORS]
         """
-        # TODO Calculate the expected payoff of each action 
+        # DONE Calculate the expected payoff of each action 
         # and return the action with the highest payoff
-        raise NotImplementedError
+        payoff_matrix = np.array([
+            [0, -1, 1],   # Rock vs. Rock, Paper, Scissors
+            [1, 0, -1],   # Paper vs. Rock, Paper, Scissors
+            [-1, 1, 0]    # Scissors vs. Rock, Paper, Scissors
+     ])
+        expected_payoffs = []
+        for action in self.actions:
+            payoff = np.dot(payoff_matrix[action], dist)
+            expected_payoffs.append(payoff)
+        best_action = self.actions[np.argmax(expected_payoffs)]
+        return best_action
 
 
 if __name__ == "__main__":
-    agent_name = ... # Please give your agent a name
+    agent_name = "Borui Liu" # Please give your agent a name
 
     agent = FictitiousPlayAgent(agent_name)
     arena = RPSArena(
