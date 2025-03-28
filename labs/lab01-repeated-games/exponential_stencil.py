@@ -46,8 +46,14 @@ class ExponentialAgent(RPSAgent):
          Uses your historical average rewards to generate a probability distribution over your next move using
          the Exponential Weights strategy
         """
-        # TODO Calculate the average reward for each action over time and return the softmax of it
-        raise NotImplementedError
+        # DONE Calculate the average reward for each action over time and return the softmax of it
+        rewards = np.zeros(len(self.actions))
+        for i in range(len(self.actions)):
+            if self.counts[i] > 0:
+                rewards[i] = self.my_utils[i] / self.counts[i]
+            else:
+                rewards[i] = 0
+        return self.softmax(rewards)
 
 
 if __name__ == "__main__":
