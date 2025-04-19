@@ -2,13 +2,28 @@ from marginal_value import calculate_marginal_value
 from sample_valuations import SampleValuations
 
 def local_bid(goods, valuation_function, price_vector, num_iterations=100):
-    """
-    Use local bid to iteratively set the bid vectors to our marginal values 
 
-    TODO: Fill in local bid as described in the pseudocode in the assignment.
-    """
+    old = {g: valuation_function({g}) for g in goods}
 
-    raise NotImplementedError
+    for iteration in range(num_iterations):
+        new = old.copy() 
+        for g in goods:
+            mv = calculate_marginal_value(goods, g, valuation_function, old, price_vector)
+            new[g] = mv
+        print(f"Iteration {iteration + 1}: {new}")
+        
+        converged = True
+        for g in goods:
+            if abs(new[g] - old[g]) > 1e-3:
+                converged = False
+                break
+        
+        old = new.copy() 
+        if converged:
+            print("Convergence reached.")
+            break
+
+    return old
 
 if __name__ == "__main__":
     goods = set(SampleValuations.SINGLE_ITEM_VALS.keys())

@@ -18,11 +18,8 @@ class TestMarginalValue(unittest.TestCase):
             return 0
 
         mv_a = calculate_marginal_value(goods, "A", valuation, bids, prices)
-
         expected_mv_a = 30
-
         self.assertAlmostEqual(mv_a, expected_mv_a, places=3, msg=f"Incorrect marginal value for A: expected {expected_mv_a}, got {mv_a}")
-
 
     def test_no_goods_won(self):
         goods = {"A", "B"}
@@ -34,53 +31,47 @@ class TestMarginalValue(unittest.TestCase):
 
         mv_a = calculate_marginal_value(goods, "A", valuation, bids, prices)
         mv_b = calculate_marginal_value(goods, "B", valuation, bids, prices)
-
         self.assertEqual(mv_a, 10, "Incorrect marginal value for A")
         self.assertEqual(mv_b, 10, "Incorrect marginal value for B")
 
-    #TODO: Fill in test cases
     def test_student_case_1(self):
-        """Student test case 1"""
-        
-        goods = ???
-        bids = ???
-        prices = ???
+
+        goods = {"A", "B", "C"}
+        bids = {"A": 100, "B": 80, "C": 100}
+        prices = {"A": 50, "B": 70, "C": 50}
 
         def student_valuation(bundle):
-            ???
+            values = {"A": 40, "B": 60, "C": 50}
+            return sum(values[g] for g in bundle)
 
-        ??? = calculate_marginal_value(goods, ???, student_valuation, bids, prices)
-
-        self.assertEqual(???, 0, "TODO: Replace with correct expected value")
+        mv_b = calculate_marginal_value(goods, "B", student_valuation, bids, prices)
+        self.assertEqual(mv_b, 60, "Incorrect marginal value for B in student test case 1")
 
     def test_student_case_2(self):
-        """Student test case 2"""
-        
-        goods = ???
-        bids = ???
-        prices = ???
+
+        goods = {"X", "Y", "Z"}
+        bids = {"X": 30, "Y": 20, "Z": 20}
+        prices = {"X": 25, "Y": 50, "Z": 50}
 
         def student_valuation(bundle):
-            ???
+            return 5 * len(bundle)
 
-        ??? = calculate_marginal_value(goods, ???, student_valuation, bids, prices)
+        mv_x = calculate_marginal_value(goods, "X", student_valuation, bids, prices)
+        self.assertEqual(mv_x, 5, "Incorrect marginal value for X in student test case 2")
 
-        self.assertEqual(???, 0, "TODO: Replace with correct expected value")
-    
     def test_student_case_3(self):
-        """Student test case 3"""
-        
-        goods = ???
-        bids = ???
-        prices = ???
+
+        goods = {"P", "Q", "R"}
+        bids = {"P": 80, "Q": 40, "R": 70}
+        prices = {"P": 60, "Q": 30, "R": 65}
 
         def student_valuation(bundle):
-            ???
+            base_values = {"P": 50, "Q": 30, "R": 40}
+            bonus = 20 if "P" in bundle and "Q" in bundle else 0
+            return sum(base_values[g] for g in bundle) + bonus
 
-        ??? = calculate_marginal_value(goods, ???, student_valuation, bids, prices)
-
-        self.assertEqual(???, 0, "TODO: Replace with correct expected value")
-
+        mv_r = calculate_marginal_value(goods, "R", student_valuation, bids, prices)
+        self.assertEqual(mv_r, 40, "Incorrect marginal value for R in student test case 3")
 
 if __name__ == "__main__":
     unittest.main()
